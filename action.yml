@@ -1,0 +1,20 @@
+name: "Auto Docs Updater"
+description: "Actualiza README.md y STATUS.md automáticamente según el estado del repo"
+
+inputs:
+  mode:
+    description: "rules o ai"
+    required: false
+    default: "rules"
+  status-file:
+    description: "Archivo donde se escribirá el estado generado"
+    required: false
+    default: "STATUS.md"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
+
+branding:
+  icon: "file-text"
+  color: "blue"
