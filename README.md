@@ -59,7 +59,9 @@ Reemplaza `tu-usuario/auto-docs-action` por la ruta real del repositorio donde p
 | Input         | Descripción                                  | Requerido | Default      |
 |---------------|-----------------------------------------------|-----------|--------------|
 | `mode`        | Modo de generación de documentación: `rules` (basado en reglas) o `ai` (aún no implementado) | No | `rules`      |
-| `status-file` | Ruta del archivo donde se escribirá el estado generado | No | `STATUS.md`  |
+| `status-file` | Ruta **relativa al workspace** donde se escribirá el estado generado | No | `STATUS.md`  |
+
+> Nota: por seguridad, `status-file` debe apuntar a una ruta dentro del repositorio (`GITHUB_WORKSPACE`). Si incluyes subcarpetas, se crean automáticamente.
 
 ## Desarrollo
 

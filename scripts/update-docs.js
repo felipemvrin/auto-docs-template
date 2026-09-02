@@ -1,6 +1,7 @@
 const core = require("@actions/core");
 const { execSync } = require("child_process");
 const fs = require("fs");
+const path = require("path");
 
 // Ejecuta un comando de shell y devuelve su salida como texto, o un mensaje
 // de fallback si el comando falla (por ejemplo, historial insuficiente).
@@ -102,11 +103,30 @@ ${nextSteps}
 `;
 }
 
+function resolveStatusFilePath(statusFile) {
+  const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+  const candidatePath = statusFile || "STATUS.md";
+  const resolvedPath = path.resolve(workspace, candidatePath);
+  const relativePath = path.relative(workspace, resolvedPath);
+
+  if (
+    path.isAbsolute(candidatePath) ||
+    relativePath.startsWith("..") ||
+    path.isAbsolute(relativePath)
+  ) {
+    throw new Error(
+      `El input "status-file" debe ser una ruta relativa dentro de ${workspace}.`
+    );
+  }
+
+  return resolvedPath;
+}
+
 // Punto de entrada principal de la action.
 async function run() {
   try {
     const mode = core.getInput("mode") || "rules";
-    const statusFile = core.getInput("status-file") || "STATUS.md";
+    const statusFile = resolveStatusFilePath(core.getInput("status-file"));
 
     core.info(`Modo seleccionado: ${mode}`);
     core.info(`Archivo de estado: ${statusFile}`);
@@ -117,6 +137,7 @@ async function run() {
 
     const markdownContent = buildMarkdownContent();
 
+    fs.mkdirSync(path.dirname(statusFile), { recursive: true });
     fs.writeFileSync(statusFile, markdownContent, "utf-8");
     core.info(`Archivo "${statusFile}" actualizado correctamente.`);
   } catch (error) {
