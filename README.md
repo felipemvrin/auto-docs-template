@@ -14,6 +14,8 @@ En cada ejecución, la action:
 4. Genera sugerencias simples de próximos pasos basadas en lo anterior.
 5. Escribe todo el resultado como markdown en el archivo indicado por `status-file` (por defecto `STATUS.md`).
 
+La action no sobrescribe `README.md`; el archivo generado por defecto es `STATUS.md`.
+
 ## Uso en cualquier proyecto
 
 No necesitas copiar código de esta action al repositorio consumidor. Crea el archivo `.github/workflows/auto-docs.yml` en cualquier proyecto GitHub y referencia la versión publicada:
@@ -25,9 +27,9 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - STATUS.md
   workflow_dispatch:
-  paths-ignore:
-    - STATUS.md
 
 permissions:
   contents: write
